@@ -1,12 +1,13 @@
-FROM alpine:3.7
+FROM alpine:3.8
 
-LABEL maintainer "mats116 <mats.kazuki@gmail.com>"
+LABEL maintainer "phoenix <github.com/azusa0127>"
 
-RUN apk add --no-cache curl && \
-    curl -sSL "http://artifacts.aerospike.com/aerospike-amc-community/4.0.13/aerospike-amc-community-4.0.13-linux.tar.gz" | tar -xvz -C / && \
-    ln -sf /dev/stdout /var/log/amc/amc.log && \
-    ln -sf /dev/stderr /var/log/amc/error.log
+RUN apk add --no-cache curl
+RUN curl -L "https://www.aerospike.com/artifacts/aerospike-amc-community/4.0.19/aerospike-amc-community-4.0.19-linux.tar.gz" | tar -xzC /
+RUN apk del curl
+RUN ln -sf /dev/stdout /var/log/amc/amc.log
+RUN ln -sf /dev/stderr /var/log/amc/error.log
 
 EXPOSE 8081
 
-CMD /opt/amc/amc -config-file=/etc/amc/amc.conf
+ENTRYPOINT [ "/opt/amc/amc", "-config-file=/etc/amc/amc.conf"]
